@@ -5,14 +5,17 @@ const app = express();
 // Parsing JSON bodies
 app.use(express.json());
 
-// Mount routers (we’ll fill these in soon)
+// Mount routers on the app
 const authRoutes = require('./routes/authRoutes');
 const taskRoutes = require('./routes/taskRoutes');
+const teamRoutes = require('./routes/teamRoutes');
+
 app.use('/api/auth', authRoutes);
 app.use('/api/tasks', taskRoutes);
+app.use('/api/teams', teamRoutes);
 
 // Health-check endpoint
-app.get('/', (req, res) => res.send('✅ API up and running'));
+app.get('/', (req, res) => res.send('API up and running'));
 
 // Sequelize DB connection & sync
 const { sequelize } = require('./models');
