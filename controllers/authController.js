@@ -22,4 +22,22 @@ exports.signup = async (req, res) => {
   }
 };
 
-exports.login  = (req, res) => res.send('Login not implemented');
+exports.login = async (req, res) => {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email and password are required.' });
+    }
+    try {
+      const user = await User.findOne({ where: { email } });
+      if (!user) return res.status(401).json({ message: 'Invalid credentials' });
+  
+      const valid = await bcrypt.compare(password, user.passwordHash);
+      if (!valid) return res.status(401).json({ message: 'Invalid credentials' });
+  
+      const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+      res.json({ token });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Server error' });
+    }
+  };
