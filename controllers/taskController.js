@@ -2,7 +2,7 @@ const { Task } = require('../models');
 const { Op } = require('sequelize');
 
 // Create a new task
-exports.createTask = async (req, res) => {
+const createTask = async (req, res) => {
   const { title, description, dueDate, assignedTo } = req.body;
   if (!title) {
     return res.status(400).json({ message: 'Title is required.' });
@@ -22,7 +22,7 @@ exports.createTask = async (req, res) => {
 };
 
 // Get all tasks for the logged-in user
-exports.listTasks = async (req, res) => {
+const listTasks = async (req, res) => {
   const { status, search, sortBy = 'createdAt', order = 'ASC' } = req.query;
   const where = { assignedTo: req.userId };
   if (status) where.status = status;
@@ -45,7 +45,7 @@ exports.listTasks = async (req, res) => {
 };
 
 // Get a single task by ID
-exports.getTask = async (req, res) => {
+const getTask = async (req, res) => {
     try {
       const task = await Task.findOne({
         where: { id: req.params.id, assignedTo: req.userId }
@@ -59,7 +59,7 @@ exports.getTask = async (req, res) => {
   };
 
 // Update a task
-exports.updateTask = async (req, res) => {
+const updateTask = async (req, res) => {
     try {
       const task = await Task.findOne({
         where: { id: req.params.id, assignedTo: req.userId }
@@ -82,7 +82,7 @@ exports.updateTask = async (req, res) => {
   };  
 
 // Delete a task
-exports.deleteTask = async (req, res) => {
+const deleteTask = async (req, res) => {
     try {
       const task = await Task.findOne({
         where: { id: req.params.id, assignedTo: req.userId }
@@ -96,4 +96,12 @@ exports.deleteTask = async (req, res) => {
       res.status(500).json({ message: 'Server error' });
     }
   };
-  
+
+// Export all handlers at once
+module.exports = {
+    createTask,
+    listTasks,
+    getTask,
+    updateTask,
+    deleteTask,
+  };
