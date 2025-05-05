@@ -44,6 +44,22 @@ exports.listTasks = async (req, res) => {
   }
 };
 
-exports.getTask = (req, res) => res.send('Get task not implemented');
+// Get a single task by ID
+exports.getTask = async (req, res) => {
+    try {
+      const task = await Task.findOne({
+        where: { id: req.params.id, assignedTo: req.userId }
+      });
+      if (!task) return res.status(404).json({ message: 'Task not found' });
+      res.json(task);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Server error' });
+    }
+  };
+
+// Update a task
 exports.updateTask = (req, res) => res.send('Update task not implemented');
+
+// Delete a task
 exports.deleteTask = (req, res) => res.send('Delete task not implemented');
