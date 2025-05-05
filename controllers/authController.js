@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt    = require('jsonwebtoken');
 const { User } = require('../models');
 
+// User registration
 exports.signup = async (req, res) => {
   const { name, email, password } = req.body;
   if (!name || !email || !password) {
@@ -21,12 +22,16 @@ exports.signup = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+// now in the above we are generating a token and sending it back to the client so that the user once registers, succesfully gets logged in too in that very session.
 
+
+// Getting user details
 exports.getMe = async (req, res) => {
     const { id, name, email } = req.user;
     res.json({ id, name, email });
 };
-  
+
+// Updating user details
 exports.updateMe = async (req, res) => {
     const { name, email, password } = req.body;
     try {
@@ -44,7 +49,7 @@ exports.updateMe = async (req, res) => {
     }
 };
   
-
+// User login
 exports.login = async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) {
