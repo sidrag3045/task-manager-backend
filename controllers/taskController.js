@@ -1,5 +1,7 @@
 const { Task } = require('../models');
+const { Op } = require('sequelize');
 
+// Create a new task
 exports.createTask = async (req, res) => {
   const { title, description, dueDate, assignedTo } = req.body;
   if (!title) {
@@ -19,7 +21,29 @@ exports.createTask = async (req, res) => {
   }
 };
 
-exports.listTasks = (req, res) => res.send('List tasks not implemented');
+// Get all tasks for the logged-in user
+exports.listTasks = async (req, res) => {
+  const { status, search, sortBy = 'createdAt', order = 'ASC' } = req.query;
+  const where = { assignedTo: req.userId };
+  if (status) where.status = status;
+  if (search) {
+    where[Op.or] = [
+      { title:   { [Op.like]: `%${search}%` } },
+      { description: { [Op.like]: `%${search}%` } }
+    ];
+  }
+  try {
+    const tasks = await Task.findAll({
+      where,
+      order: [[sortBy, order.toUpperCase()]]
+    });
+    res.json(tasks);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 exports.getTask = (req, res) => res.send('Get task not implemented');
 exports.updateTask = (req, res) => res.send('Update task not implemented');
 exports.deleteTask = (req, res) => res.send('Delete task not implemented');
