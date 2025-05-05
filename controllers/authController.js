@@ -22,7 +22,7 @@ const signup = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
-// now in the above we are generating a token and sending it back to the client so that the user once registers, succesfully gets logged in too in that very session.
+// now in the above we are generating a token and sending it back to the client so that the user once registers, successfully gets logged in too in that very session.
 
 
 // Getting user details
