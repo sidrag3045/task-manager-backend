@@ -3,6 +3,7 @@ const User = require('./user');
 const Task = require('./task');
 const Team = require('./team');
 const Comment   = require('./comment');
+const Attachment = require('./attachment');
 
 // User-Task Associations (One-to-Many)
 User.hasMany(Task, { foreignKey: 'assignedTo' });
@@ -23,4 +24,12 @@ Comment.belongsTo(Task, { foreignKey: 'taskId' });
 User.hasMany(Comment, { foreignKey: 'userId', onDelete: 'CASCADE' });
 Comment.belongsTo(User, { foreignKey: 'userId' });
 
-module.exports = { sequelize, User, Task, Team, Comment };
+// Task–Attachment (1:M)
+Task.hasMany(Attachment, { foreignKey: 'taskId', onDelete: 'CASCADE' });
+Attachment.belongsTo(Task, { foreignKey: 'taskId' });
+
+// User–Attachment (1:M)
+User.hasMany(Attachment, { foreignKey: 'userId', onDelete: 'CASCADE' });
+Attachment.belongsTo(User, { foreignKey: 'userId' });
+
+module.exports = { sequelize, User, Task, Team, Comment, Attachment };
