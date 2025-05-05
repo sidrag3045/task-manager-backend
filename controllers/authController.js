@@ -22,6 +22,29 @@ exports.signup = async (req, res) => {
   }
 };
 
+exports.getMe = async (req, res) => {
+    const { id, name, email } = req.user;
+    res.json({ id, name, email });
+};
+  
+exports.updateMe = async (req, res) => {
+    const { name, email, password } = req.body;
+    try {
+        if (name)  req.user.name = name;
+        if (email) req.user.email = email;
+        if (password) {
+        req.user.passwordHash = await bcrypt.hash(password, 10);
+        }
+        await req.user.save();
+        const { id } = req.user;
+        res.json({ id, name: req.user.name, email: req.user.email });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+  
+
 exports.login = async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) {
