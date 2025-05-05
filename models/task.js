@@ -21,6 +21,10 @@ const Task = sequelize.define('Task', {
   assignedTo: {
     type: DataTypes.INTEGER,
     allowNull: true
+  },
+  teamId: {
+    type: DataTypes.INTEGER,
+    allowNull: true
   }
 });
 
