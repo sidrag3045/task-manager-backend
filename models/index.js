@@ -2,6 +2,7 @@ const sequelize = require('../config/database');
 const User = require('./user');
 const Task = require('./task');
 const Team = require('./team');
+const Comment   = require('./comment');
 
 // User-Task Associations (One-to-Many)
 User.hasMany(Task, { foreignKey: 'assignedTo' });
@@ -15,4 +16,11 @@ Team.belongsToMany(User, { through: 'TeamMembers' });
 Team.hasMany(Task, { foreignKey: 'teamId' });
 Task.belongsTo(Team, { foreignKey: 'teamId' });
 
-module.exports = { sequelize, User, Task, Team };
+// Comment associations (One-to-Many)
+Task.hasMany(Comment, { foreignKey: 'taskId', onDelete: 'CASCADE' });
+Comment.belongsTo(Task, { foreignKey: 'taskId' });
+
+User.hasMany(Comment, { foreignKey: 'userId', onDelete: 'CASCADE' });
+Comment.belongsTo(User, { foreignKey: 'userId' });
+
+module.exports = { sequelize, User, Task, Team, Comment };
